@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ABOUT, PLAYER } from "@/data/portfolio";
 import { SectionWrapper, FadeInItem } from "@/components/ui/SectionWrapper";
+import { SectionHeader } from "@/components/ui/PixelKit";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { PixelConsole } from "@/components/ui/PixelArt";
 
@@ -11,15 +12,12 @@ export function About() {
     <>
       <SectionDivider title="About Me" />
       <SectionWrapper id="about">
-        <FadeInItem>
-          <div className="mb-4 font-pixel text-xs sm:text-sm text-neon-pink">Level 01</div>
-          <h2 className="mb-2 font-ui text-2xl sm:text-3xl md:text-4xl text-slate-200">
-            Meet the player
-          </h2>
-          <h3 className="mb-10 font-pixel text-lg sm:text-xl md:text-2xl text-neon-green text-glow-green">
-            {PLAYER.name}
-          </h3>
-        </FadeInItem>
+        <SectionHeader
+          eyebrow="Player Profile"
+          title="Meet the player"
+          intro={PLAYER.name}
+          tone="pink"
+        />
 
         <motion.div
           className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-12"

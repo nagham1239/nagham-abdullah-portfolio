@@ -6,10 +6,13 @@ import { motion } from "framer-motion";
 import { Mail, Send, Loader2 } from "lucide-react";
 import { PLAYER } from "@/data/portfolio";
 import { SectionWrapper, FadeInItem } from "@/components/ui/SectionWrapper";
+import { SectionHeader } from "@/components/ui/PixelKit";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { PixelButton } from "@/components/ui/PixelButton";
 
 type FormStatus = "idle" | "loading" | "success" | "error";
+
+const ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
 
 export function Contact() {
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -17,8 +20,15 @@ export function Contact() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus("loading");
     setErrorMsg("");
+
+    if (!ACCESS_KEY) {
+      setErrorMsg("Contact form is not configured yet. Please email me directly.");
+      setStatus("error");
+      return;
+    }
+
+    setStatus("loading");
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -29,16 +39,30 @@ export function Contact() {
     };
 
     try {
-      const res = await fetch("/api/contact", {
+      // Web3Forms sits behind Cloudflare, which serves a bot challenge to
+      // server-to-server requests — so the submission goes straight from the
+      // browser, which is Web3Forms' documented usage. The access key is a
+      // public key by design and is safe to ship client-side.
+      // Sent as FormData on purpose: a JSON content-type triggers a CORS
+      // preflight that Web3Forms rejects, while multipart form data is a
+      // "simple request" and goes straight through.
+      const body = new FormData();
+      body.append("access_key", ACCESS_KEY);
+      body.append("name", String(payload.name));
+      body.append("email", String(payload.email));
+      body.append("message", String(payload.message));
+      body.append("subject", `Portfolio message from ${payload.name}`);
+      body.append("from_name", "Nagham Portfolio");
+
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body,
       });
 
-      const data = (await res.json()) as { error?: string; success?: boolean };
+      const data = (await res.json()) as { success?: boolean; message?: string };
 
-      if (!res.ok) {
-        setErrorMsg(data.error ?? "Failed to send message.");
+      if (!res.ok || !data.success) {
+        setErrorMsg(data.message ?? "Failed to send message. Please try again.");
         setStatus("error");
         return;
       }
@@ -56,15 +80,12 @@ export function Contact() {
     <>
       <SectionDivider title="Final Portal" />
       <SectionWrapper id="contact" className="pb-32">
-        <FadeInItem>
-          <motion.div className="mb-4 font-pixel text-xs sm:text-sm text-neon-purple">End Game</motion.div>
-          <h2 className="mb-3 font-ui text-2xl sm:text-3xl md:text-4xl text-slate-200">
-            Final Portal
-          </h2>
-          <p className="mb-10 max-w-2xl font-ui text-base sm:text-lg text-slate-400">
-            Ready to start a new mission together? Send a message — it goes straight to my inbox.
-          </p>
-        </FadeInItem>
+        <SectionHeader
+          eyebrow="End Game"
+          title="Final Portal"
+          intro="Open to frontend and full-stack roles. Messages go straight to my inbox."
+          tone="purple"
+        />
 
         <motion.div
           className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16"

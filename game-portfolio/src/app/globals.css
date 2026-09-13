@@ -60,7 +60,7 @@ body {
   border: 3px solid var(--pixel-border);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 0 30px rgba(168, 85, 247, 0.15),
+    0 0 14px rgba(168, 85, 247, 0.13),
     4px 4px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -101,10 +101,15 @@ body {
 }
 
 .glass-hud {
-  background: var(--hud-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* A more opaque base means a much smaller blur reads the same behind a
+     dark page — and a 6px backdrop-filter on a full-width fixed bar is
+     dramatically cheaper to composite on every scroll tick than 12px. */
+  background: rgba(13, 13, 43, 0.88);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   border: 2px solid rgba(168, 85, 247, 0.35);
+  transform: translateZ(0);
+  contain: layout paint;
 }
 
 .text-glow-pink {
@@ -239,4 +244,157 @@ input:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--neon-cyan);
   outline-offset: 3px;
+}
+
+/* Prevent long pixel headings from forcing horizontal scroll on small screens */
+.font-pixel {
+  overflow-wrap: anywhere;
+}
+
+
+/* Gentle idle float for small decorative mockups (compositor-only). */
+@keyframes float-soft {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -4px, 0); }
+}
+
+.float-soft {
+  will-change: transform;
+  animation: float-soft 4s ease-in-out infinite;
+}
+
+/* Blinking "insert coin" cue on closed accordion triggers. */
+@keyframes blink-cue {
+  0%, 60% { opacity: 1; }
+  61%, 100% { opacity: 0.25; }
+}
+
+.blink-cue {
+  animation: blink-cue 1.3s steps(1, end) infinite;
+}
+
+/* Accordion triggers read as pressable hardware. */
+.slot-trigger {
+  transition: background-color 0.25s ease;
+}
+
+.slot-trigger:hover {
+  background: rgba(34, 211, 238, 0.04);
+}
+
+.slot-trigger:focus-visible {
+  outline: 3px solid var(--neon-cyan);
+  outline-offset: -3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float-soft,
+  .blink-cue {
+    animation: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Hero sizing
+ *
+ * The hero is sized to the viewport minus the fixed HUD, but never
+ * forced to it: min-height gets the composed full-screen feel on tall
+ * screens, while the content's own height wins on short laptops so
+ * nothing is ever clipped. --hud is the fixed navbar's height.
+ * ------------------------------------------------------------------ */
+
+:root {
+  --hud: 56px;
+}
+
+@media (min-width: 640px) {
+  :root { --hud: 62px; }
+}
+
+.hero-fit {
+  min-height: calc(100svh - var(--hud));
+  padding-top: calc(var(--hud) + 1.5rem);
+  padding-bottom: 2.5rem;
+}
+
+/* Short laptops (1366×768, 1440×900): let the content set the height so
+   the player card and CTAs stay fully visible instead of overflowing. */
+@media (min-width: 1024px) and (max-height: 860px) {
+  .hero-fit {
+    min-height: 0;
+    padding-top: calc(var(--hud) + 1rem);
+    padding-bottom: 1.75rem;
+  }
+}
+
+/* Very short viewports: tighten further. */
+@media (max-height: 700px) {
+  .hero-fit {
+    min-height: 0;
+    padding-top: calc(var(--hud) + 0.75rem);
+    padding-bottom: 1.25rem;
+  }
+}
+
+/* Tall phones keep the full-screen arcade feel. */
+@media (max-width: 1023px) {
+  .hero-fit {
+    min-height: calc(100svh - var(--hud));
+    padding-top: calc(var(--hud) + 1.25rem);
+    padding-bottom: 3rem;
+  }
+}
+
+/* The player card is the tallest thing in the hero, so it is what gets
+   scaled on short screens to keep the whole composition on one screen. */
+@media (min-width: 1024px) and (max-height: 900px) {
+  .player-card { max-width: 23.5rem; }
+}
+
+@media (min-width: 1024px) and (max-height: 800px) {
+  .player-card { max-width: 20rem; }
+
+  .hero-fit .animate-pulse-glow {
+    padding-block: 0.75rem;
+  }
+
+  .hero-fit h1 {
+    font-size: clamp(1.25rem, 3.4vw, 2.1rem);
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 700px) {
+  .player-card { max-width: 17rem; }
+}
+
+/* Mobile/tablet: the hero stacks, so the card shrinks and the vertical
+   rhythm tightens to keep name, roles and CTAs on the first screen. */
+@media (max-width: 1023px) {
+  .player-card { max-width: 15rem; }
+
+  .hero-fit .animate-pulse-glow {
+    padding-block: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .player-card { max-width: 12.5rem; }
+
+  .hero-fit {
+    padding-top: calc(var(--hud) + 0.75rem);
+    padding-bottom: 2rem;
+  }
+
+  /* compress the stacked hero's gaps */
+  .hero-fit > div { gap: 1.25rem; }
+}
+
+@media (max-width: 380px) {
+  .player-card { max-width: 11rem; }
+}
+
+@media (max-width: 640px) {
+  .player-card { max-width: 10.5rem; }
+  .hero-fit > div { gap: 1rem; }
+  .hero-fit .game-bar-track { height: 0.625rem; }
 }

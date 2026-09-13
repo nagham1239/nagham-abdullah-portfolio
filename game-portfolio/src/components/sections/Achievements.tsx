@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ACHIEVEMENTS } from "@/data/portfolio";
 import { SectionWrapper, FadeInItem } from "@/components/ui/SectionWrapper";
+import { SectionHeader } from "@/components/ui/PixelKit";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 
 export function Achievements() {
@@ -13,15 +14,12 @@ export function Achievements() {
     <>
       <SectionDivider title="Achievements Unlocked" />
       <SectionWrapper id="achievements">
-        <FadeInItem>
-          <motion.div className="mb-4 font-pixel text-xs sm:text-sm text-yellow-300">Trophy Room</motion.div>
-          <h2 className="mb-3 font-ui text-2xl sm:text-3xl md:text-4xl text-slate-200">
-            Achievements Unlocked
-          </h2>
-          <p className="mb-10 max-w-2xl font-ui text-base sm:text-lg text-slate-400">
-            Badges earned through battles with bugs, deadlines, and design challenges.
-          </p>
-        </FadeInItem>
+        <SectionHeader
+          eyebrow="Trophy Room"
+          title="Achievements Unlocked"
+          intro="What the last two years of shipping actually earned."
+          tone="yellow"
+        />
 
         <motion.div
           className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"

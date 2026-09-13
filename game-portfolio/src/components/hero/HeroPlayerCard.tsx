@@ -60,7 +60,7 @@ export function HeroPlayerCard() {
   };
 
   return (
-    <div className="relative w-full max-w-md">
+    <div className="player-card relative w-full max-w-md lg:max-w-lg">
       {/* Ambient glow */}
       <motion.div
         className="pointer-events-none absolute -inset-8 rounded-full blur-3xl"

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { SKILLS, RARITY_STYLES } from "@/data/portfolio";
 import { SectionWrapper, FadeInItem } from "@/components/ui/SectionWrapper";
+import { SectionHeader } from "@/components/ui/PixelKit";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 
@@ -11,15 +12,12 @@ export function Skills() {
     <>
       <SectionDivider title="Weapons / Inventory" />
       <SectionWrapper id="skills">
-        <FadeInItem>
-          <motion.div className="mb-4 font-pixel text-xs sm:text-sm text-neon-cyan">Inventory</motion.div>
-          <h2 className="mb-3 font-ui text-2xl sm:text-3xl md:text-4xl text-slate-200">
-            Weapons Mastery
-          </h2>
-          <p className="mb-10 max-w-2xl font-ui text-base sm:text-lg text-slate-400">
-            Skills collected on the journey — each with its own rarity and power level.
-          </p>
-        </FadeInItem>
+        <SectionHeader
+          eyebrow="Inventory"
+          title="Weapons Mastery"
+          intro="The tools behind the missions above."
+          tone="cyan"
+        />
 
         <motion.div
           className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5"

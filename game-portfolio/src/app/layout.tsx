@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Press_Start_2P, VT323 } from "next/font/google";
 import "./globals.css";
 
@@ -16,11 +16,59 @@ const vt323 = VT323({
   display: "swap",
 });
 
+const SITE = "https://nagham-abdullah-portfolio.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Nagham Abdullah | Retro Game Portfolio",
+  metadataBase: new URL(SITE),
+  title: "Nagham Abdullah | Frontend & Full-Stack Developer",
   description:
-    "Frontend Developer & UI/UX Enthusiast — an immersive retro pixel-art portfolio experience.",
-  keywords: ["portfolio", "frontend developer", "UI/UX", "React", "Next.js"],
+    "Frontend and full-stack developer, UI/UX designer and former frontend team lead. I build production web products with React, Next.js, TypeScript and Supabase — presented as a retro pixel-art quest log.",
+  keywords: [
+    "Nagham Abdullah",
+    "Frontend Developer",
+    "Full-Stack Developer",
+    "UI/UX Designer",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Tailwind CSS",
+    "Supabase",
+    "Lebanon",
+  ],
+  authors: [{ name: "Nagham Abdullah", url: SITE }],
+  creator: "Nagham Abdullah",
+  alternates: { canonical: SITE },
+  openGraph: {
+    type: "website",
+    url: SITE,
+    siteName: "Nagham Abdullah",
+    title: "Nagham Abdullah | Frontend & Full-Stack Developer",
+    description:
+      "Production web products with React, Next.js, TypeScript and Supabase — dashboards, multi-role platforms and public sites.",
+    images: [
+      {
+        url: "/projects/urm-enroll-desktop.jpg",
+        width: 1600,
+        height: 1000,
+        alt: "Selected work by Nagham Abdullah",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nagham Abdullah | Frontend & Full-Stack Developer",
+    description:
+      "Production web products with React, Next.js, TypeScript and Supabase.",
+    images: ["/projects/urm-enroll-desktop.jpg"],
+  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#06061a",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
